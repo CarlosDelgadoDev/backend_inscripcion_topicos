@@ -25,6 +25,8 @@ var modulosRouter = require('./routes/modulos');
 var materiasRouter = require('./routes/materias');
 var docentesRouter = require('./routes/docentes');
 
+var tasksRoute = require('./routes/task')
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
@@ -59,5 +61,7 @@ app.use('/aulas', aulasRouter);
 app.use('/modulos', modulosRouter);
 app.use('/materias', materiasRouter);
 app.use('/docentes', docentesRouter);
+
+app.use("/tasks", tasksRoute);
 
 module.exports = app;
