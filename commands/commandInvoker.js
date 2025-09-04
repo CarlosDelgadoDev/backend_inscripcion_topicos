@@ -56,8 +56,7 @@ const GetActaDeNotasCommand = require('./actaDeNotas/getActaDeNotasCommand');
 
 
 class CommandInvoker {
-
-    commands = {
+    static commands = {
         'create_facultad': CreateFacultadCommand,
         'update_facultad': UpdateFacultadCommand,
         'delete_facultad': DeleteFacultadCommand,
@@ -77,41 +76,44 @@ class CommandInvoker {
         'create_carrera': CreateCarreraCommand,
         'update_carrera': UpdateCarreraCommand,
         'delete_carrera': DeleteCarreraCommand,
-    'get_carrera': GetCarreraCommand,
-    'create_periodo': CreatePeriodoCommand,
-    'update_periodo': UpdatePeriodoCommand,
-    'delete_periodo': DeletePeriodoCommand,
-    'get_periodo': GetPeriodoCommand,
-    'create_grupoMateria': CreateGrupoMateriaCommand,
-    'update_grupoMateria': UpdateGrupoMateriaCommand,
-    'delete_grupoMateria': DeleteGrupoMateriaCommand,
-    'get_grupoMateria': GetGrupoMateriaCommand,
-    'create_aula': CreateAulaCommand,
-    'update_aula': UpdateAulaCommand,
-    'delete_aula': DeleteAulaCommand,
-    'get_aula': GetAulaCommand,
-    'create_modulo': CreateModuloCommand,
-    'update_modulo': UpdateModuloCommand,
-    'delete_modulo': DeleteModuloCommand,
-    'get_modulo': GetModuloCommand,
-    'create_horario': CreateHorarioCommand,
-    'update_horario': UpdateHorarioCommand,
-    'delete_horario': DeleteHorarioCommand,
-    'get_horario': GetHorarioCommand,
-    'create_actaDeNotas': CreateActaDeNotasCommand,
-    'update_actaDeNotas': UpdateActaDeNotasCommand,
-    'delete_actaDeNotas': DeleteActaDeNotasCommand,
-    'get_actaDeNotas': GetActaDeNotasCommand
+        'get_carrera': GetCarreraCommand,
+        'create_periodo': CreatePeriodoCommand,
+        'update_periodo': UpdatePeriodoCommand,
+        'delete_periodo': DeletePeriodoCommand,
+        'get_periodo': GetPeriodoCommand,
+        'create_grupoMateria': CreateGrupoMateriaCommand,
+        'update_grupoMateria': UpdateGrupoMateriaCommand,
+        'delete_grupoMateria': DeleteGrupoMateriaCommand,
+        'get_grupoMateria': GetGrupoMateriaCommand,
+        'create_aula': CreateAulaCommand,
+        'update_aula': UpdateAulaCommand,
+        'delete_aula': DeleteAulaCommand,
+        'get_aula': GetAulaCommand,
+        'create_modulo': CreateModuloCommand,
+        'update_modulo': UpdateModuloCommand,
+        'delete_modulo': DeleteModuloCommand,
+        'get_modulo': GetModuloCommand,
+        'create_horario': CreateHorarioCommand,
+        'update_horario': UpdateHorarioCommand,
+        'delete_horario': DeleteHorarioCommand,
+        'get_horario': GetHorarioCommand,
+        'create_actaDeNotas': CreateActaDeNotasCommand,
+        'update_actaDeNotas': UpdateActaDeNotasCommand,
+        'delete_actaDeNotas': DeleteActaDeNotasCommand,
+        'get_actaDeNotas': GetActaDeNotasCommand
+        // 'delete_facultad': DeleteFacultadCommand,
+        // 'get_facultad': GetFacultadCommand
     };
 
-
     static createCommand(commandType, data) {
+        console.log("Creando comando:", commandType);
+        console.log("Datos del comando:", data);
         const CommandClass = this.commands[commandType];
         if (!CommandClass) {
             throw new Error(`Tipo de comando no soportado: ${commandType}`);
         }
         return new CommandClass(data);
     }
-}   
+}
 
 module.exports = CommandInvoker;

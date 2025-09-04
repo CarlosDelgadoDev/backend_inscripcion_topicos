@@ -24,8 +24,9 @@ var aulasRouter = require('./routes/aulas');
 var modulosRouter = require('./routes/modulos');
 var materiasRouter = require('./routes/materias');
 var docentesRouter = require('./routes/docentes');
-
 var tasksRoute = require('./routes/task')
+
+require("./workers/worker")
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');

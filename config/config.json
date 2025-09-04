@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "carlos",
-    "password": "12345678",
-    "database": "topicos",
+    "username": "postgres",
+    "password": "60910990",
+    "database": "topicos_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

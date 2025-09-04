@@ -2,8 +2,9 @@ const { Worker } = require('bullmq');
 const redisConnection = require('../config/redis');
 const CommandInvoker = require('../commands/commandInvoker');
 
-const worker = new Worker('taskQueue', async job => {
-  const { task, data } = job.data;
+const worker = new Worker('tasksQueue', async job => {
+  console.log(`WORKER: Procesando job ${job.id} con datos:`, job.data);
+  const { task, data } = job.data.data;
   
   try {
     // Usar el invocador para crear el comando apropiado
