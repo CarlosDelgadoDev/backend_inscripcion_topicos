@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Worker Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Worker Status</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Acción</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <button id="startButton" onclick="startWorker()">Iniciar</button>
+                    <button id="stopButton" onclick="stopWorker()">Detener</button>
+                </td>
+                <td>
+                    <span id="statusText" class="status"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        async function startWorker() {
+            try {
+                const response = await fetch('/worker/start');
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.status);
+                    updateStatus();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al iniciar el worker');
+            }
+        }
+
+        async function stopWorker() {
+            try {
+                const response = await fetch('/worker/stop');
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.status);
+                    updateStatus();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al detener el worker');
+            }
+        }
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('/worker/status');
+                const data = await response.json();
+                const statusText = data.status_running ? 'Corriendo' : 'Detenido';
+                document.getElementById('statusText').textContent = statusText;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('statusText').textContent = 'Error al obtener el estado';
+            }
+        }
+
+        // Actualizar el estado al cargar la página
+        updateStatus();
+    </script>
+</body>
+</html>
