@@ -1,56 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worker Status</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 80%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        button {
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .status {
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Worker Status</h1>
+    <div class="container">
+        <h1>Worker Status</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Acción</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <button id="startButton" onclick="startWorker()">Iniciar</button>
-                    <button id="stopButton" onclick="stopWorker()">Detener</button>
-                </td>
-                <td>
-                    <span id="statusText" class="status"></span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Acción</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <button id="startButton" class="btn btn-primary" onclick="startWorker()">Iniciar</button>
+                        <button id="stopButton" class="btn btn-danger" onclick="stopWorker()">Detener</button>
+                    </td>
+                    <td>
+                        <span id="statusText" class="font-weight-bold"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Job Details</h2>
+        <button class="btn btn-info mb-2" onclick="updateJobDetails()">Recargar Jobs</button>
+        <table id="jobTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>State</th>
+                    <th>Data</th>
+                    <th>Return Value</th>
+                    <th>Failed Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos de los jobs se insertarán aquí -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         async function startWorker() {
@@ -60,6 +61,7 @@
                 if (response.ok) {
                     alert(data.status);
                     updateStatus();
+                    updateJobDetails();
                 } else {
                     alert('Error: ' + data.error);
                 }
@@ -76,6 +78,7 @@
                 if (response.ok) {
                     alert(data.status);
                     updateStatus();
+                    updateJobDetails();
                 } else {
                     alert('Error: ' + data.error);
                 }
@@ -97,8 +100,71 @@
             }
         }
 
+        async function updateJobDetails() {
+            try {
+                const response = await fetch('/worker/jobs');
+                const jobs = await response.json();
+                const jobTableBody = document.getElementById('jobTable').getElementsByTagName('tbody')[0];
+                jobTableBody.innerHTML = '';
+
+                jobs.forEach(job => {
+                    let row = jobTableBody.insertRow();
+                    let idCell = row.insertCell();
+                    let nameCell = row.insertCell();
+                    let stateCell = row.insertCell();
+                    let dataCell = row.insertCell();
+                    let returnValueCell = row.insertCell();
+                    let failedReasonCell = row.insertCell();
+
+                    idCell.textContent = job.id;
+                    nameCell.textContent = job.name;
+                    stateCell.textContent = job.state;
+
+                    // Data
+                    dataCell.innerHTML = `
+                        <button class="btn btn-sm btn-outline-info" type="button" data-toggle="collapse" data-target="#data-${job.id}" aria-expanded="false" aria-controls="data-${job.id}">
+                            Ver Data
+                        </button>
+                        <div class="collapse" id="data-${job.id}">
+                            <div class="card card-body">
+                                <pre>${JSON.stringify(job.data, null, 2)}</pre>
+                            </div>
+                        </div>
+                    `;
+
+                    // Return Value
+                    returnValueCell.innerHTML = `
+                        <button class="btn btn-sm btn-outline-info" type="button" data-toggle="collapse" data-target="#return-${job.id}" aria-expanded="false" aria-controls="return-${job.id}">
+                            Ver Return Value
+                        </button>
+                        <div class="collapse" id="return-${job.id}">
+                            <div class="card card-body">
+                                <pre>${JSON.stringify(job.returnvalue, null, 2)}</pre>
+                            </div>
+                        </div>
+                    `;
+
+                    // Failed Reason
+                    failedReasonCell.innerHTML = `
+                        <button class="btn btn-sm btn-outline-info" type="button" data-toggle="collapse" data-target="#failed-${job.id}" aria-expanded="false" aria-controls="failed-${job.id}">
+                            Ver Failed Reason
+                        </button>
+                        <div class="collapse" id="failed-${job.id}">
+                            <div class="card card-body">
+                                <pre>${job.failedReason ? job.failedReason : ''}</pre>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error al obtener los detalles de los jobs:', error);
+            }
+        }
+
         // Actualizar el estado al cargar la página
         updateStatus();
+        // Actualizar los detalles de los jobs al cargar la página
+        updateJobDetails();
     </script>
 </body>
 </html>

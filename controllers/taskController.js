@@ -1,5 +1,5 @@
 // Controlador CRUD para Aula
-const queue = require('../workers/queue');
+const {queue} = require('../workers/queue');
 
 exports.createTask = async (req, res) => {
 
@@ -20,6 +20,7 @@ exports.createTask = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error);
         res.status(400).json({ error: error.message });
     }
 };
