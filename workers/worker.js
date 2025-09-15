@@ -1,6 +1,8 @@
 const { Worker } = require('bullmq');
 const redisConnection = require('../config/redis');
 const CommandInvoker = require('../commands/commandInvoker');
+const { saveUnique } = require('../helpers/redisHelper');
+const taskMap = require('../helpers/taskMap');
 
 class TaskWorker {
     constructor(queueName, connection, concurrency = 1) {
@@ -17,55 +19,51 @@ class TaskWorker {
                 const { task, data } = job.data.data;
 
                 try {
-                    // Usar el invocador para crear el comando apropiado
-                    const command = CommandInvoker.createCommand(task, data);
+                    // 🔹 Validación de duplicados usando taskMap
+                    const taskInfo = taskMap[task];
+                    if (taskInfo) {
+                        const { tabla, idField } = taskInfo;
+                        const uniqueId = data[idField];
+                        const resultUnique = await saveUnique(tabla, uniqueId, data);
 
-                    // Esto ejecuta el comando
+                        if (!resultUnique.success) {
+                            console.log(`Job ${job.id} duplicado:`, resultUnique.message);
+                            return { error: resultUnique.message };
+                        }
+                    }
+
+                    // 🔹 Ejecutar el comando real
+                    const command = CommandInvoker.createCommand(task, data);
                     const result = await command.execute();
 
                     console.log(`Resultado del job ${job.id}:`, result);
-
                     return result;
+
                 } catch (error) {
-                    // Manejar errores de manera consistente
                     console.error(`Error processing task ${task}:`, error);
                     throw error;
                 }
             }, { connection: this.connection, concurrency: this.concurrency });
 
-            this.worker.on('completed', job => {
+            // Listeners de job completado
+            this.worker.on('completed', async job => {
                 console.log(`Job ${job.id} completado`);
                 const callbackUrl = job.data.data.callback;
                 const res = job.returnvalue;
 
                 fetch(callbackUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ result: res })
                 })
                     .then(response => response.json())
                     .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => console.error('Error callback:', error));
             });
 
+            // Listeners de job fallido
             this.worker.on('failed', (job, err) => {
                 console.error(`Job ${job.id} falló:`, err.message);
-                const callbackUrl = job.data.data.callback;
-                console.log(callbackUrl);
-                const res = job.returnvalue;
-
-                fetch(callbackUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ result: res })
-                })
-                    .then(response => response.json())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
             });
 
             console.log('Worker iniciado');
@@ -90,5 +88,4 @@ class TaskWorker {
 }
 
 const taskWorker = new TaskWorker('tasksQueue', redisConnection, 1);
-
 module.exports = taskWorker;
