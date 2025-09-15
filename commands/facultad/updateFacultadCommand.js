@@ -3,15 +3,18 @@ const { Facultad } = require('../../models');
 
 class UpdateFacultadCommand extends BaseCommand {
   async execute() {
-    const [updated] = await Facultad.update(this.data, { 
-      where: { id: this.data.id } 
-    });
-    
-    if (!updated) throw new Error('Facultad no encontrada');
-    
-    const facultad = await Facultad.findByPk(this.data.id);
-    //aqui falta hacer el callback para confirmar al cliente
-    console.log({ success: true, facultad });
+    // 1. Primero, encuentra el registro. Esto nos permite verificar si existe.
+    const facultadExistente = await Facultad.findByPk(this.data.id);
+    if (!facultadExistente) {
+      throw new Error('Facultad no encontrada.');
+    }
+
+    // 2. Realiza la actualización directamente sobre la instancia que encontraste.
+    const facultadActualizada = await facultadExistente.update(this.data);
+
+    // 3. ¡Ya tienes la instancia actualizada! No necesitas otra consulta a la base de datos.
+    console.log({ success: true, facultad: facultadActualizada });
+    return { success: true, facultad: facultadActualizada }; // Es buena idea retornar el valor
   }
 }
 

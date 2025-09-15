@@ -23,6 +23,8 @@ class TaskWorker {
                     // Esto ejecuta el comando
                     const result = await command.execute();
 
+                    console.log(`Resultado del job ${job.id}:`, result);
+
                     return result;
                 } catch (error) {
                     // Manejar errores de manera consistente

@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-  GrupoMateria.belongsTo(models.Materia, { foreignKey: 'materiaId' });
-  GrupoMateria.belongsTo(models.Docente, { foreignKey: 'docenteId' });
-  GrupoMateria.belongsTo(models.Periodo, { foreignKey: 'periodoId' });
-  GrupoMateria.hasMany(models.Detalle_Inscripcion, { foreignKey: 'grupoMateriaId' });
-  GrupoMateria.hasMany(models.Horario, { foreignKey: 'grupoMateriaId' });
+      GrupoMateria.belongsTo(models.Materia, { foreignKey: 'materiaId' });
+      GrupoMateria.belongsTo(models.Docente, { foreignKey: 'docenteId' });
+      GrupoMateria.belongsTo(models.Periodo, { foreignKey: 'periodoId' });
+      GrupoMateria.hasMany(models.Detalle_Inscripcion, { foreignKey: 'grupoMateriaId' });
+      GrupoMateria.hasMany(models.Horario, { foreignKey: 'grupoMateriaId' });
     }
   }
   GrupoMateria.init({
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Grupo_Materia',
-    tableName: 'Grupo_Materias', // 👈 nombre exacto de la tabla
+    tableName: 'Grupo_Materias',
   });
   return GrupoMateria;
 };

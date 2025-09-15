@@ -18,6 +18,10 @@ module.exports = {
       modalidad: {
         type: Sequelize.STRING
       },
+      codigo: {
+        type: Sequelize.STRING,
+        unique: true
+      },
       carreraId: {
         type: Sequelize.INTEGER,
         references: {

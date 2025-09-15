@@ -61,30 +61,37 @@ class CommandInvoker {
         'update_facultad': UpdateFacultadCommand,
         'delete_facultad': DeleteFacultadCommand,
         'get_facultad': GetFacultadCommand,
+
         'create_estudiante': CreateEstudianteCommand,
         'update_estudiante': UpdateEstudianteCommand,
         'delete_estudiante': DeleteEstudianteCommand,
         'get_estudiante': GetEstudianteCommand,
+
         'create_materia': CreateMateriaCommand,
         'update_materia': UpdateMateriaCommand,
         'delete_materia': DeleteMateriaCommand,
         'get_materia': GetMateriaCommand,
+
         'create_docente': CreateDocenteCommand,
         'update_docente': UpdateDocenteCommand,
         'delete_docente': DeleteDocenteCommand,
         'get_docente': GetDocenteCommand,
+
         'create_carrera': CreateCarreraCommand,
         'update_carrera': UpdateCarreraCommand,
         'delete_carrera': DeleteCarreraCommand,
         'get_carrera': GetCarreraCommand,
+
         'create_periodo': CreatePeriodoCommand,
         'update_periodo': UpdatePeriodoCommand,
         'delete_periodo': DeletePeriodoCommand,
         'get_periodo': GetPeriodoCommand,
+
         'create_grupoMateria': CreateGrupoMateriaCommand,
         'update_grupoMateria': UpdateGrupoMateriaCommand,
         'delete_grupoMateria': DeleteGrupoMateriaCommand,
         'get_grupoMateria': GetGrupoMateriaCommand,
+        
         'create_aula': CreateAulaCommand,
         'update_aula': UpdateAulaCommand,
         'delete_aula': DeleteAulaCommand,

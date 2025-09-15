@@ -1,4 +1,5 @@
 const swaggerJSDoc = require('swagger-jsdoc');
+//const fs = require('fs');
 
 const options = {
   definition: {
@@ -18,5 +19,8 @@ const options = {
 };
 
 const swaggerSpec = swaggerJSDoc(options);
+
+// Guardar la especificación en un archivo JSON
+//fs.writeFileSync('./swagger-output.json', JSON.stringify(swaggerSpec, null, 2));
 
 module.exports = swaggerSpec;

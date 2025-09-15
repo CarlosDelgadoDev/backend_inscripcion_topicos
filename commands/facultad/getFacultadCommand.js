@@ -1,5 +1,5 @@
 const BaseCommand = require('../baseCommand');
-const { Facultad } = require('../../models');
+const { Facultad, Carrera } = require('../../models');
 
 class GetFacultadCommand extends BaseCommand {
 	async execute() {
@@ -10,10 +10,13 @@ class GetFacultadCommand extends BaseCommand {
 
 		// Consulta paginada
 		const { count, rows: facultades } = await Facultad.findAndCountAll({
+			include: [Carrera], // Aquí puedes incluir asociaciones si es necesario
 			limit: pageSize,
 			offset: (page - 1) * pageSize,
 			order: [['createdAt', 'DESC']] // opcional: puedes cambiar el campo de orden
 		});
+
+		//console.log("facultades::::::::::::::::",facultades);
 
 		// Calcular total de páginas
 		const totalPages = Math.ceil(count / pageSize);

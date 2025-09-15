@@ -21,7 +21,7 @@ async function getJobDetails() {
             });
         }
 
-        console.log('Detalles de los Jobs:', jobDetails);
+        //console.log('Detalles de los Jobs:', jobDetails);
         return jobDetails;
 
     } catch (error) {

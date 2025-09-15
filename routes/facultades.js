@@ -16,6 +16,22 @@ const facultadesController = require('../controllers/facultadesController');
  *   get:
  *     summary: Obtener todas las facultades
  *     tags: [Facultades]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Número de página (por defecto 1)
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Número de elementos por página (por defecto 10)
  *     responses:
  *       200:
  *         description: Lista de facultades
@@ -24,23 +40,23 @@ router.get('/', facultadesController.getFacultades);
 
 /**
  * @swagger
- * /facultades/{id}:
+ * /facultades/{sigla}:
  *   get:
  *     summary: Obtener facultad por ID
  *     tags: [Facultades]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: sigla
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Facultad encontrada
  *       404:
  *         description: No encontrado
  */
-router.get('/:id', facultadesController.getFacultadById);
+router.get('/:sigla', facultadesController.getFacultadBySigla);
 
 /**
  * @swagger
@@ -65,51 +81,72 @@ router.post('/', facultadesController.createFacultad);
 
 /**
  * @swagger
- * /facultades/{id}:
+ * /facultades/{sigla}:
  *   put:
  *     summary: Actualizar facultad
  *     tags: [Facultades]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: sigla
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nombre
+ *               - descripcion
+ *               - sigla
  *             properties:
  *               nombre:
  *                 type: string
+ *                 example: "facultad nueva"
+ *               descripcion:
+ *                 type: string
+ *                 example: "descripcion de la nueva facultad"
+ *               sigla:
+ *                 type: string
+ *                 example: "FN"
+ *               carreras:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - codigo
+ *                   properties:
+ *                     codigo:
+ *                       type: string
+ *                       example: "CRN"
  *     responses:
  *       200:
  *         description: Facultad actualizada
  *       404:
  *         description: No encontrado
  */
-router.put('/:id', facultadesController.updateFacultad);
+router.put('/:sigla', facultadesController.updateFacultad);
 
 /**
  * @swagger
- * /facultades/{id}:
+ * /facultades/{sigla}:
  *   delete:
  *     summary: Eliminar facultad
  *     tags: [Facultades]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: sigla
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Facultad eliminada
  *       404:
  *         description: No encontrado
  */
-router.delete('/:id', facultadesController.deleteFacultad);
+router.delete('/:sigla', facultadesController.deleteFacultad);
 
 module.exports = router;
