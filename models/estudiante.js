@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Estudiante.init({
+    registro: DataTypes.INTEGER,
     nombre: DataTypes.STRING,
     apellidoPaterno: DataTypes.STRING,
     apellidoMaterno: DataTypes.STRING,

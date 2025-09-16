@@ -339,6 +339,6 @@ router.put('/:sigla', carrerasController.updateCarrera);
  *       404:
  *         description: No encontrado
  */
-router.delete('/:id', carrerasController.deleteCarrera);
+router.delete('/:sigla', carrerasController.deleteCarrera);
 
 module.exports = router;

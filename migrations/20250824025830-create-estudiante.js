@@ -9,6 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      registro: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true,
+        autoIncrement: true,
+      },
       nombre: {
         type: Sequelize.STRING
       },

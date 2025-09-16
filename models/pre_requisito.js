@@ -11,8 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-  Pre_requisito.belongsTo(models.Materia, { foreignKey: 'materiaId' });
-  Pre_requisito.belongsTo(models.Materia, { foreignKey: 'prerequisitoId' });
+  // Alias para la relación 'Pre_requisito -> Materia (la materia principal)'
+      Pre_requisito.belongsTo(models.Materia, { foreignKey: 'materiaId', as: 'MateriaPrincipal' });
+      // Alias para la relación 'Pre_requisito -> Materia (la materia prerrequisito)'
+      Pre_requisito.belongsTo(models.Materia, { foreignKey: 'prerequisitoId', as: 'MateriaPrerequisito' });
+  
     }
   }
   Pre_requisito.init({
